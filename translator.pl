@@ -34,7 +34,7 @@ translate_ENG(ENG, ESP):-
 % word -> noun | propper_noun | determinant | subject |
 %         verb | adjective | preposition | quantifier | 
 %         adverb | conjunction 
-word(ESP, ENG):- pronoun(_, _, ESP, ENG); 
+word(ESP, ENG):- pronoun(_, _, _, ESP, ENG); 
                  determinant(_, _, ESP, ENG); 
                  subject(_,_, ESP, ENG);
                  proper_noun(_, _, ESP, ENG); 
@@ -73,60 +73,83 @@ connector([Signo_puntuacion|ESP_rest], ESP_rest, [Punctuation_sign|ENG_rest], EN
 
 
 %___________ Phrase __________________________
+% phrase -> phrase_noun, phrase_verb
+phrase(ESP, ESP_rest, ENG, ENG_rest):-  
+    phrase_noun(ESP, ESP_mid_rest, ENG, ENG_mid_rest, Number, Person, Gender),
+    phrase_verb(ESP_mid_rest, ESP_rest, ENG_mid_rest, ENG_rest, Number, Person, Gender).
+
 % phrase -> phrase_noun
 phrase(ESP, ESP_rest, ENG, ENG_rest):-  
-    phrase_noun(ESP, ESP_rest, ENG, ENG_rest, _, _).
+    phrase_noun(ESP, ESP_rest, ENG, ENG_rest, _, _, _).
 
 
 %___________ Phrase Noun _____________________
 % phrase_noun -> determinant, subject, adjective
-phrase_noun([Determinante, Sujeto, Adjetivo|ESP_rest], ESP_rest, [Determinant, Adjective, Subject|ENG_rest], ENG_rest, Number, third):-
+phrase_noun([Determinante, Sujeto, Adjetivo|ESP_rest], ESP_rest, [Determinant, Adjective, Subject|ENG_rest], ENG_rest, Number, third, Gender):-
     determinant(Gender, Number, Determinante, Determinant),
     subject(Gender, Number, Sujeto, Subject),
     adjective(Gender, Number, Adjetivo, Adjective).
 
 % phrase_noun -> determinant, subject, proper_noun
-phrase_noun([Determinante, Sujeto, Nombre_propio|ESP_rest], ESP_rest, [Determinant, Subject, Proper_noun|ENG_rest], ENG_rest, Number, third):-
+phrase_noun([Determinante, Sujeto, Nombre_propio|ESP_rest], ESP_rest, [Determinant, Subject, Proper_noun|ENG_rest], ENG_rest, Number, third, Gender):-
     determinant(Gender, Number, Determinante, Determinant),
     subject(Gender, Number, Sujeto, Subject),
     proper_noun(Gender, Number, Nombre_propio, Proper_noun).
 
 % phrase_noun -> determinant, subject
-phrase_noun([Determinante, Sujeto|ESP_rest], ESP_rest, [Determinant, Subject|ENG_rest], ENG_rest, Number, third):-
+phrase_noun([Determinante, Sujeto|ESP_rest], ESP_rest, [Determinant, Subject|ENG_rest], ENG_rest, Number, third, Gender):-
     determinant(Gender, Number, Determinante, Determinant),
     subject(Gender, Number, Sujeto, Subject).
 
 % phrase_noun -> subject, adjective
-phrase_noun([Sujeto, Adjetivo|ESP_rest], ESP_rest, [Adjective, Subject|ENG_rest], ENG_rest, Number, third):-
+phrase_noun([Sujeto, Adjetivo|ESP_rest], ESP_rest, [Adjective, Subject|ENG_rest], ENG_rest, Number, third, Gender):-
     subject(Gender, Number, Sujeto, Subject),
     adjective(Gender, Number, Adjetivo, Adjective).
 
 % phrase_noun -> pronoun
-phrase_noun([Pronombre|ESP_rest], ESP_rest, [Pronoun|ENG_rest], ENG_rest, Number, Person):-
-    pronoun(Number, Person, Pronombre, Pronoun).
+phrase_noun([Pronombre|ESP_rest], ESP_rest, [Pronoun|ENG_rest], ENG_rest, Number, Person, Gender):-
+    pronoun(Gender, Number, Person, Pronombre, Pronoun).
 
 % phrase_noun -> pronoun
-phrase_noun([Pronombre|ESP_rest], ESP_rest, [Pronoun|ENG_rest], ENG_rest, Number, Person):-
-    pronoun(Number, Person, Pronombre, Pronoun).
+phrase_noun([Pronombre|ESP_rest], ESP_rest, [Pronoun|ENG_rest], ENG_rest, Number, Person, Gender):-
+    pronoun(Gender, Number, Person, Pronombre, Pronoun).
 
 % phrase_noun -> subject
-phrase_noun([Sujeto|ESP_rest], ESP_rest, [Subject|ENG_rest], ENG_rest, Number, third):-
-    subject(_, Number, Sujeto, Subject).
+phrase_noun([Sujeto|ESP_rest], ESP_rest, [Subject|ENG_rest], ENG_rest, Number, third, Gender):-
+    subject(Gender, Number, Sujeto, Subject).
 
 % phrase_noun -> subject
-phrase_noun([Sujeto|ESP_rest], ESP_rest, [Subject|ENG_rest], ENG_rest, Number, third):-
-    subject(_, Number, Sujeto, Subject).
+phrase_noun([Sujeto|ESP_rest], ESP_rest, [Subject|ENG_rest], ENG_rest, Number, third, Gender):-
+    subject(Gender, Number, Sujeto, Subject).
 
 % phrase_noun -> proper_noun
-phrase_noun([Nombre_propio|ESP_rest], ESP_rest, [Proper_noun|ENG_rest], ENG_rest, Number, third):-
-    proper_noun(_, Number, Nombre_propio, Proper_noun).
+phrase_noun([Nombre_propio|ESP_rest], ESP_rest, [Proper_noun|ENG_rest], ENG_rest, Number, third, Gender):-
+    proper_noun(Gender, Number, Nombre_propio, Proper_noun).
+
+
+%___________ Phrase Verb _____________________
+% phrase_verb -> verb, adjective
+% with verb to be, matches phrase_noun and adjective gender
+phrase_verb([Verbo, Adjetivo|ESP_rest], ESP_rest, [Verb, Adjective|ENG_rest], ENG_rest, Number, Person, Gender):-
+    verb(Number, Person, _, Verbo, Verb),
+    verb_to_be(Verb),
+    adjective(Gender, Number, Adjetivo, Adjective).
+
+% phrase_verb -> verb, adjective
+phrase_verb([Verbo, Adjetivo|ESP_rest], ESP_rest, [Verb, Adjective|ENG_rest], ENG_rest, Number, Person, _):-
+    verb(Number, Person, _, Verbo, Verb),
+    adjective(_, Number, Adjetivo, Adjective).
+
+% phrase_verb -> verb
+phrase_verb([Verbo|ESP_rest], ESP_rest, [Verb|ENG_rest], ENG_rest, Number, Person, _):-
+    verb(Number, Person, _, Verbo, Verb).
 
 %_____________________________________________
 determinant(male, singular, 'el', 'the').
 determinant(female, singular, 'la', 'the').
 
-pronoun(singular, third, 'ella', 'she').
-pronoun(singular, first, 'yo', 'i').
+pronoun(female, singular, third, 'ella', 'she').
+pronoun(_, singular, first, 'yo', 'i').
 
 proper_noun(male, singular, 'prolog', 'prolog').
 
@@ -138,9 +161,14 @@ verb(singular, third, present, 'compite', 'competes').
 verb(singular, third, present, 'tiene', 'has').
 verb(singular, third, present, 'corre', 'runs').
 verb(singular, first, present, 'salto', 'jump').
+verb(singular, third, present, 'es', 'is').
+
+verb_to_be('is').
 
 adjective(male, singular, 'grande', 'big').
 adjective(male, singular, 'azul', 'blue').
+adjective(male, singular, 'lento', 'slow').
+adjective(female, singular, 'lenta', 'slow').
 
 preposition('en', 'in').
 
