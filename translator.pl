@@ -90,9 +90,9 @@ connector([Signo_puntuacion|ESP_rest], ESP_rest, [Punctuation_sign|ENG_rest], EN
 
 %___________ PHRASE __________________________
 % phrase -> phrase_noun, phrase_verb
-phrase(ESP, ESP_rest, ENG, ENG_rest):-  
-    phrase_noun(ESP, ESP_mid_rest, ENG, ENG_mid_rest, Number, Person, Gender),
-    phrase_verb(ESP_mid_rest, ESP_rest, ENG_mid_rest, ENG_rest, Number, Person, Gender).
+% phrase(ESP, ESP_rest, ENG, ENG_rest):-  
+%     phrase_noun(ESP, ESP_mid_rest, ENG, ENG_mid_rest, Number, Person, Gender),
+%     phrase_verb(ESP_mid_rest, ESP_rest, ENG_mid_rest, ENG_rest, Number, Person, Gender).
 
 
 % phrase -> phrase_noun
@@ -110,57 +110,72 @@ phrase(ESP, ESP_rest, ENG, ENG_rest):-
     phrase_adverb(ESP, ESP_rest, ENG, ENG_rest).
 
 %___________ PHRASE NOUN _____________________
-% phrase_noun -> determinant, subject, adjective
-phrase_noun([Determinante, Sujeto, Adjetivo|ESP_rest], ESP_rest, [Determinant, Adjective, Subject|ENG_rest], ENG_rest, Number, third, Gender):-
+% phrase_noun -> noun_core
+phrase_noun(ESP, ESP_rest, ENG, ENG_rest, Number, Person, Gender):-
+    noun_core(ESP, ESP_rest, ENG, ENG_rest, Number, Person, Gender).
+
+% phrase_noun -> noun_core, noun_complement
+phrase_noun(ESP, ESP_rest, ENG, ENG_rest, Number, Person, Gender):-
+    noun_core(ESP, ESP_mid_rest, ENG, ENG_mid_rest, Number, Person, Gender),
+    noun_complement(ESP_mid_rest, ESP_rest, ENG_mid_rest, ENG_rest, Number, Person, Gender).
+
+
+% noun_core -> determinant, subject, adjective, proper_noun
+noun_core([Determinante, Sujeto, Adjetivo, Nombre_propio|ESP_rest], ESP_rest, [Determinant, Adjective, Subject, Proper_noun|ENG_rest], ENG_rest, Number, third, Gender):-
+    determinant(Gender, Number, Determinante, Determinant),
+    subject(Gender, Number, Sujeto, Subject),
+    adjective(Gender, Number, Adjetivo, Adjective),
+    proper_noun(Gender, Number, Nombre_propio, Proper_noun).
+
+
+% noun_core -> determinant, subject, adjective
+noun_core([Determinante, Sujeto, Adjetivo|ESP_rest], ESP_rest, [Determinant, Adjective, Subject|ENG_rest], ENG_rest, Number, third, Gender):-
     determinant(Gender, Number, Determinante, Determinant),
     subject(Gender, Number, Sujeto, Subject),
     adjective(Gender, Number, Adjetivo, Adjective).
 
 
-% phrase_noun -> determinant, subject, proper_noun
-phrase_noun([Determinante, Sujeto, Nombre_propio|ESP_rest], ESP_rest, [Determinant, Subject, Proper_noun|ENG_rest], ENG_rest, Number, third, Gender):-
+% noun_core -> determinant, subject, proper_noun
+noun_core([Determinante, Sujeto, Nombre_propio|ESP_rest], ESP_rest, [Determinant, Subject, Proper_noun|ENG_rest], ENG_rest, Number, third, Gender):-
     determinant(Gender, Number, Determinante, Determinant),
     subject(Gender, Number, Sujeto, Subject),
     proper_noun(Gender, Number, Nombre_propio, Proper_noun).
 
 
-% phrase_noun -> determinant, subject
-phrase_noun([Determinante, Sujeto|ESP_rest], ESP_rest, [Determinant, Subject|ENG_rest], ENG_rest, Number, third, Gender):-
-    determinant(Gender, Number, Determinante, Determinant),
-    subject(Gender, Number, Sujeto, Subject).
-
-
-% phrase_noun -> subject, adjective
-phrase_noun([Sujeto, Adjetivo|ESP_rest], ESP_rest, [Adjective, Subject|ENG_rest], ENG_rest, Number, third, Gender):-
+% noun_core -> subject, adjective
+noun_core([Sujeto, Adjetivo|ESP_rest], ESP_rest, [Adjective, Subject|ENG_rest], ENG_rest, Number, third, Gender):-
     subject(Gender, Number, Sujeto, Subject),
     adjective(Gender, Number, Adjetivo, Adjective).
 
 
-% phrase_noun -> pronoun
-phrase_noun([Pronombre|ESP_rest], ESP_rest, [Pronoun|ENG_rest], ENG_rest, Number, Person, Gender):-
-    pronoun(Gender, Number, Person, Pronombre, Pronoun).
-
-
-% phrase_noun -> pronoun
-phrase_noun([Pronombre|ESP_rest], ESP_rest, [Pronoun|ENG_rest], ENG_rest, Number, Person, Gender):-
-    pronoun(Gender, Number, Person, Pronombre, Pronoun).
-
-
-% phrase_noun -> subject
-phrase_noun([Sujeto|ESP_rest], ESP_rest, [Subject|ENG_rest], ENG_rest, Number, third, Gender):-
+% noun_core -> determinant, subject
+noun_core([Determinante, Sujeto|ESP_rest], ESP_rest, [Determinant, Subject|ENG_rest], ENG_rest, Number, third, Gender):-
+    determinant(Gender, Number, Determinante, Determinant),
     subject(Gender, Number, Sujeto, Subject).
 
 
-% phrase_noun -> subject
-phrase_noun([Sujeto|ESP_rest], ESP_rest, [Subject|ENG_rest], ENG_rest, Number, third, Gender):-
+% noun_core -> pronoun
+noun_core([Pronombre|ESP_rest], ESP_rest, [Pronoun|ENG_rest], ENG_rest, Number, Person, Gender):-
+    pronoun(Gender, Number, Person, Pronombre, Pronoun).
+
+
+% noun_core -> subject
+noun_core([Sujeto|ESP_rest], ESP_rest, [Subject|ENG_rest], ENG_rest, Number, third, Gender):-
     subject(Gender, Number, Sujeto, Subject).
 
 
-% phrase_noun -> proper_noun
-phrase_noun([Nombre_propio|ESP_rest], ESP_rest, [Proper_noun|ENG_rest], ENG_rest, Number, third, Gender):-
+% noun_core -> proper_noun
+noun_core([Nombre_propio|ESP_rest], ESP_rest, [Proper_noun|ENG_rest], ENG_rest, Number, third, Gender):-
     proper_noun(Gender, Number, Nombre_propio, Proper_noun).
 
 
+% noun_complement -> phrase_verb
+noun_complement(ESP, ESP_rest, ENG, ENG_rest, Number, Person, Gender):-
+    phrase_verb(ESP, ESP_rest, ENG, ENG_rest, Number, Person, Gender).
+
+% noun_complement -> phrase_preposition
+noun_complement(ESP, ESP_rest, ENG, ENG_rest, _, _, _):-
+    phrase_preposition(ESP, ESP_rest, ENG, ENG_rest).
 
 %___________ PHRASE VERB _____________________
 % phrase_verb -> verb, adjective
@@ -235,9 +250,12 @@ preposition_complement(ESP, ESP_rest, ENG, ENG_rest):-
 preposition_complement(ESP, ESP_rest, ENG, ENG_rest):-
     phrase_adverb(ESP, ESP_rest, ENG, ENG_rest).
 
+
 % preposition_complement -> phrase_adverb
 preposition_complement(ESP, ESP_rest, ENG, ENG_rest):-
     phrase_adjective(ESP, ESP_rest, ENG, ENG_rest, _, _).
+
+
 
 %___________ PHRASE ADJECTIVE ________________
 % phrase_adjective -> adjective_core
@@ -255,6 +273,7 @@ phrase_adjective(ESP, ESP_rest, ENG, ENG_rest, Genre, Person):-
 adjective_core([Cuantificador, Adjetivo|ESP_rest], ESP_rest, [Quantifier, Adjective|ENG_rest], ENG_rest, Genre, Person):-
     quantifier(Cuantificador, Quantifier),
     adjective(Genre, Person, Adjetivo, Adjective).
+
 
 % adjective_core -> adjective
 adjective_core([Adjetivo|ESP_rest], ESP_rest, [Adjective|ENG_rest], ENG_rest, Genre, Person):-
