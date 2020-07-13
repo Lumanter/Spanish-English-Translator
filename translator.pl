@@ -1,9 +1,6 @@
 
 :-module(translator, [translate_ESP/2, translate_ENG/2]).
 
-use_module(knowledge_database).
-consult(knowledge_database).
-
 %_____________________________________________
 % translate_ESP: Translates text, with single quotes, from spanish to english. 
 %                Can't be used the other way around due to text to list conversion indefinitions.
@@ -162,14 +159,14 @@ phrase(ESP, ESP_rest, ENG, ENG_rest):-
 %         Person - grammatical person of the grammar particle
 %         Gender - grammatical gender of the grammar particle
 %_____________________________________________
-% phrase_noun -> noun_core
-phrase_noun(ESP, ESP_rest, ENG, ENG_rest, Number, Person, Gender):-
-    noun_core(ESP, ESP_rest, ENG, ENG_rest, Number, Person, Gender).
-
 % phrase_noun -> noun_core, noun_complement
 phrase_noun(ESP, ESP_rest, ENG, ENG_rest, Number, Person, Gender):-
     noun_core(ESP, ESP_mid_rest, ENG, ENG_mid_rest, Number, Person, Gender),
     noun_complement(ESP_mid_rest, ESP_rest, ENG_mid_rest, ENG_rest, Number, Person, Gender).
+
+% phrase_noun -> noun_core
+phrase_noun(ESP, ESP_rest, ENG, ENG_rest, Number, Person, Gender):-
+    noun_core(ESP, ESP_rest, ENG, ENG_rest, Number, Person, Gender).
 
 
 
@@ -445,6 +442,7 @@ adjective_core([Adjetivo|ESP_rest], ESP_rest, [Adjective|ENG_rest], ENG_rest, Ge
 %         ENG - word in english
 %_____________________________________________
 determinant(male, singular, 'el', 'the').
+determinant(male, plural, 'los', 'the').
 determinant(female, singular, 'la', 'the').
 
 %_____________________________________________
@@ -460,6 +458,7 @@ determinant(female, singular, 'la', 'the').
 %_____________________________________________
 pronoun(female, singular, third, 'ella', 'she').
 pronoun(_, singular, first, 'yo', 'i').
+pronoun(male, singular, third, 'uno', 'one').
 
 
 %_____________________________________________
@@ -486,8 +485,10 @@ proper_noun(male, singular, 'prolog', 'prolog').
 %         ENG - word in english
 %_____________________________________________
 subject(male, singular, 'carro', 'car'). 
-subject(male, singular, 'lenguaje', 'language'). 
+subject(male, singular, 'ladron', 'thief'). 
+subject(male, plural, 'lenguajes', 'languages'). 
 subject(female, singular, 'pista', 'track'). 
+subject(female, singular, 'programacion', 'programming'). 
 
 
 %_____________________________________________
@@ -530,9 +531,11 @@ verb_to_be('is').
 %         ENG - word in english
 %_____________________________________________
 adjective(male, singular, 'grande', 'big').
+adjective(male, singular, 'ladron', 'thief').
 adjective(male, singular, 'azul', 'blue').
 adjective(male, singular, 'lento', 'slow').
 adjective(female, singular, 'lenta', 'slow').
+adjective(female, singular, 'logica', 'logic').
 
 
 %_____________________________________________
