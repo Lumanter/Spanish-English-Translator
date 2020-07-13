@@ -190,6 +190,14 @@ noun_core([Determinante, Sujeto, Adjetivo, Nombre_propio|ESP_rest], ESP_rest, [D
     proper_noun(Gender, Number, Nombre_propio, Proper_noun).
 
 
+% noun_core -> determinant, subject, adjective, adjective
+noun_core([Determinante, Sujeto, Adjetivo_1, Adjetivo_2|ESP_rest], ESP_rest, [Determinant, Adjective_1, Adjective_2, Subject|ENG_rest], ENG_rest, Number, third, Gender):-
+    determinant(Gender, Number, Determinante, Determinant),
+    subject(Gender, Number, Sujeto, Subject),
+    adjective(Gender, Number, Adjetivo_1, Adjective_1),
+    adjective(Gender, Number, Adjetivo_2, Adjective_2).
+
+
 % noun_core -> determinant, subject, adjective
 noun_core([Determinante, Sujeto, Adjetivo|ESP_rest], ESP_rest, [Determinant, Adjective, Subject|ENG_rest], ENG_rest, Number, third, Gender):-
     determinant(Gender, Number, Determinante, Determinant),
@@ -209,6 +217,13 @@ noun_core([Determinante, Sujeto, Nombre_propio|ESP_rest], ESP_rest, [Determinant
     determinant(Gender, Number, Determinante, Determinant),
     subject(Gender, Number, Sujeto, Subject),
     proper_noun(Gender, Number, Nombre_propio, Proper_noun).
+
+
+% noun_core -> subject, adjective, adjective
+noun_core([Sujeto, Adjetivo_1, Adjetivo_2|ESP_rest], ESP_rest, [Adjective_1, Adjective_2, Subject|ENG_rest], ENG_rest, Number, third, Gender):-
+    subject(Gender, Number, Sujeto, Subject),
+    adjective(Gender, Number, Adjetivo_1, Adjective_1),
+    adjective(Gender, Number, Adjetivo_2, Adjective_2).
 
 
 % noun_core -> subject, adjective
@@ -491,6 +506,7 @@ adjective_core([Adjetivo|ESP_rest], ESP_rest, [Adjective|ENG_rest], ENG_rest, Ge
 determinant(male, singular, 'el', 'the').
 determinant(male, plural, 'los', 'the').
 determinant(female, singular, 'la', 'the').
+determinant(female, plural, 'las', 'the').
 
 %_____________________________________________
 % pronoun: Creates correspondence between a grammar pronoun in Spanish and English.
@@ -532,8 +548,10 @@ proper_noun(male, singular, 'prolog', 'prolog').
 %         ENG - word in english
 %_____________________________________________
 subject(male, singular, 'carro', 'car'). 
+subject(male, singular, 'mono', 'monkey'). 
 subject(male, singular, 'ladron', 'thief'). 
 subject(male, plural, 'lenguajes', 'languages'). 
+subject(female, plural, 'flores', 'flowers'). 
 subject(female, singular, 'pista', 'track'). 
 subject(female, singular, 'programacion', 'programming'). 
 
@@ -555,6 +573,7 @@ verb(singular, third, present, 'corre', 'runs').
 verb(singular, first, present, 'salto', 'jump').
 verb(singular, third, present, 'salta', 'jumps').
 verb(singular, third, present, 'es', 'is').
+verb(plural, third, present, 'son', 'are').
 
 
 %_____________________________________________
@@ -583,6 +602,7 @@ adjective(male, singular, 'azul', 'blue').
 adjective(male, singular, 'lento', 'slow').
 adjective(female, singular, 'lenta', 'slow').
 adjective(female, singular, 'logica', 'logical').
+adjective(female, plural, 'amarillas', 'yellow').
 
 
 %_____________________________________________
