@@ -261,6 +261,11 @@ noun_complement(ESP, ESP_rest, ENG, ENG_rest, _, _, _):-
     phrase_preposition(ESP, ESP_rest, ENG, ENG_rest).
 
 
+% noun_complement -> phrase_adverb
+noun_complement(ESP, ESP_rest, ENG, ENG_rest, _, _, _):-
+    phrase_adverb(ESP, ESP_rest, ENG, ENG_rest).
+
+
 
 %_____________________________________________
 % phrase_verb: Translates a verb phrase (sintagma verbal in spanish), 
