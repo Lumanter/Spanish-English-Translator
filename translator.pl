@@ -338,6 +338,11 @@ verb_core([Verbo|ESP_mid_rest], ESP_rest, [Verb|ENG_mid_rest], ENG_rest, Number,
     phrase_adjective(ESP_mid_rest, ESP_rest, ENG_mid_rest, ENG_rest, _, _).
 
 
+% verb_core -> verb
+verb_core([Verbo|ESP_rest], ESP_rest, [Verb|ENG_rest], ENG_rest, Number, Person, _):-
+    verb(Number, Person, _, Verbo, Verb).
+
+
 
 %_____________________________________________
 % verb_complement: Translates the complement of the verb phrase (sintagma verbal in spanish), 
@@ -370,10 +375,16 @@ verb_complement(ESP, ESP_rest, ENG, ENG_rest, _, _):-
 %         ENG - input word list in english
 %         ENG_rest - output word list in english, used to traverse the english input list
 %_____________________________________________
-% phrase_adverb -> adverb_core
+% phrase_adverb -> adverb_core, phrase_preposition
 phrase_adverb(ESP, ESP_rest, ENG, ENG_rest):-
     adverb_core(ESP, ESP_mid_rest, ENG, ENG_mid_rest),
     phrase_preposition(ESP_mid_rest, ESP_rest, ENG_mid_rest, ENG_rest).
+
+
+% phrase_adverb -> adverb_core, phrase_adjective
+phrase_adverb(ESP, ESP_rest, ENG, ENG_rest):-
+    adverb_core(ESP, ESP_mid_rest, ENG, ENG_mid_rest),
+    phrase_adjective(ESP_mid_rest, ESP_rest, ENG_mid_rest, ENG_rest, _, _).
 
 
 % phrase_adverb -> adverb_core
@@ -504,6 +515,7 @@ adjective_core([Adjetivo|ESP_rest], ESP_rest, [Adjective|ENG_rest], ENG_rest, Ge
 %         ENG - word in english
 %_____________________________________________
 determinant(male, singular, 'el', 'the').
+determinant(male, singular, 'un', 'a').
 determinant(male, plural, 'los', 'the').
 determinant(female, singular, 'la', 'the').
 determinant(female, plural, 'las', 'the').
@@ -548,8 +560,10 @@ proper_noun(male, singular, 'prolog', 'prolog').
 %         ENG - word in english
 %_____________________________________________
 subject(male, singular, 'carro', 'car'). 
+subject(female, singular, 'linguistica', 'linguistics'). 
 subject(male, singular, 'mono', 'monkey'). 
 subject(male, singular, 'ladron', 'thief'). 
+subject(male, singular, 'lenguaje', 'language'). 
 subject(male, plural, 'lenguajes', 'languages'). 
 subject(female, plural, 'flores', 'flowers'). 
 subject(female, singular, 'pista', 'track'). 
@@ -603,6 +617,8 @@ adjective(male, singular, 'lento', 'slow').
 adjective(female, singular, 'lenta', 'slow').
 adjective(female, singular, 'logica', 'logical').
 adjective(female, plural, 'amarillas', 'yellow').
+adjective(male, singular, 'asociado', 'associated').
+adjective(_, singular, 'computacional', 'computational').
 
 
 %_____________________________________________
@@ -651,6 +667,7 @@ quantifier('un poco', 'a little').
 % Params: ESP - word in spanish
 %         ENG - word in english
 %_____________________________________________
+adverb('comunmente', 'commonly').
 adverb('pronto', 'soon').
 adverb('cerca', 'near').
 adverb('aqui', 'here').
