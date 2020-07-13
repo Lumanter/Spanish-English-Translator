@@ -274,35 +274,70 @@ noun_complement(ESP, ESP_rest, ENG, ENG_rest, _, _, _):-
 %         Person - grammatical person of the grammar particle
 %         Gender - grammatical gender of the grammar particle
 %_____________________________________________
-% phrase_verb -> verb, adjective
+% phrase_verb -> verb_core, verb_complement
+phrase_verb(ESP, ESP_rest, ENG, ENG_rest, Number, Person, Gender):-
+    verb_core(ESP, ESP_mid_rest, ENG, ENG_mid_rest, Number, Person, Gender),
+    verb_complement(ESP_mid_rest, ESP_rest, ENG_mid_rest, ENG_rest, Number, Person).
+
+
+% verb -> verb_core
+phrase_verb(ESP, ESP_rest, ENG, ENG_rest, Number, Person, Gender):-
+    verb_core(ESP, ESP_rest, ENG, ENG_rest, Number, Person, Gender).
+
+
+
+%_____________________________________________
+% verb_core: Translates the core of the verb phrase (sintagma verbal in spanish), as list of words, 
+%            from english to spanish and the other way around. 
+%
+% Params: ESP (implicit as first parameter) - input word list in spanish
+%         ESP_rest - output word list in spanish, used to traverse the spanish input list
+%         ENG (implicit as third parameter) - input word list in english
+%         ENG_rest - output word list in english, used to traverse the english input list
+%         Number - grammatical number of the grammar particle
+%         Person - grammatical person of the grammar particle
+%         Gender - grammatical gender of the grammar particle
+%_____________________________________________
+% verb_core -> verb, adjective
 % with verb to be, matches phrase_noun and adjective gender
-phrase_verb([Verbo, Adjetivo|ESP_rest], ESP_rest, [Verb, Adjective|ENG_rest], ENG_rest, Number, Person, Gender):-
+verb_core([Verbo, Adjetivo|ESP_rest], ESP_rest, [Verb, Adjective|ENG_rest], ENG_rest, Number, Person, Gender):-
     verb(Number, Person, _, Verbo, Verb),
     verb_to_be(Verb),
     adjective(Gender, Number, Adjetivo, Adjective).
 
 
-% phrase_verb -> verb, adjective
-phrase_verb([Verbo, Adjetivo|ESP_rest], ESP_rest, [Verb, Adjective|ENG_rest], ENG_rest, Number, Person, _):-
+% verb_core -> verb, adjective
+verb_core([Verbo, Adjetivo|ESP_rest], ESP_rest, [Verb, Adjective|ENG_rest], ENG_rest, Number, Person, _):-
     verb(Number, Person, _, Verbo, Verb),
     adjective(_, Number, Adjetivo, Adjective).
 
 
-% phrase_verb -> verb, phrase_noun
-phrase_verb([Verbo|ESP_mid_rest], ESP_rest, [Verb|ENG_mid_rest], ENG_rest, Number, Person, _):-
+% verb_core -> verb, phrase_adjective
+verb_core([Verbo|ESP_mid_rest], ESP_rest, [Verb|ENG_mid_rest], ENG_rest, Number, Person, _):-
     verb(Number, Person, _, Verbo, Verb),
-    phrase_noun(ESP_mid_rest, ESP_rest, ENG_mid_rest, ENG_rest, _, Person, _).
+    phrase_adjective(ESP_mid_rest, ESP_rest, ENG_mid_rest, ENG_rest, _, _).
 
 
-% phrase_verb -> verb, phrase_adverb
-phrase_verb([Verbo|ESP_mid_rest], ESP_rest, [Verb|ENG_mid_rest], ENG_rest, Number, Person, _):-
-    verb(Number, Person, _, Verbo, Verb),
-    phrase_adverb(ESP_mid_rest, ESP_rest, ENG_mid_rest, ENG_rest).
+
+%_____________________________________________
+% verb_complement: Translates the complement of the verb phrase (sintagma verbal in spanish), 
+%                  as list of words, from english to spanish and the other way around. 
+%
+% Params: ESP - input word list in spanish
+%         ESP_rest - output word list in spanish, used to traverse the spanish input list
+%         ENG - input word list in english
+%         ENG_rest - output word list in english, used to traverse the english input list
+%         Number - grammatical number of the grammar particle
+%         Person - grammatical person of the grammar particle
+%_____________________________________________
+% verb_complement -> phrase_noun
+verb_complement(ESP, ESP_rest, ENG, ENG_rest, Number, Person):-
+    phrase_noun(ESP, ESP_rest, ENG, ENG_rest, Number, Person, _).
 
 
-% phrase_verb -> verb
-phrase_verb([Verbo|ESP_rest], ESP_rest, [Verb|ENG_rest], ENG_rest, Number, Person, _):-
-    verb(Number, Person, _, Verbo, Verb).
+% verb_complement -> phrase_adverb
+verb_complement(ESP, ESP_rest, ENG, ENG_rest, _, _):-
+    phrase_adverb(ESP, ESP_rest, ENG, ENG_rest).
 
 
 
@@ -542,7 +577,7 @@ adjective(male, singular, 'ladron', 'thief').
 adjective(male, singular, 'azul', 'blue').
 adjective(male, singular, 'lento', 'slow').
 adjective(female, singular, 'lenta', 'slow').
-adjective(female, singular, 'logica', 'logic').
+adjective(female, singular, 'logica', 'logical').
 
 
 %_____________________________________________
