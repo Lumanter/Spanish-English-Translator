@@ -197,6 +197,13 @@ noun_core([Determinante, Sujeto, Adjetivo|ESP_rest], ESP_rest, [Determinant, Adj
     adjective(Gender, Number, Adjetivo, Adjective).
 
 
+% noun_core -> determinant, pre_noun_adjective, subject
+noun_core([Determinante, Pre_sujeto_adjetivo, Sujeto|ESP_rest], ESP_rest, [Determinant, Pre_noun_adjective, Subject|ENG_rest], ENG_rest, Number, third, Gender):-
+    determinant(Gender, Number, Determinante, Determinant),
+    subject(Gender, Number, Sujeto, Subject),
+    pre_noun_adjective(Gender, Number, Pre_sujeto_adjetivo, Pre_noun_adjective).
+
+
 % noun_core -> determinant, subject, proper_noun
 noun_core([Determinante, Sujeto, Nombre_propio|ESP_rest], ESP_rest, [Determinant, Subject, Proper_noun|ENG_rest], ENG_rest, Number, third, Gender):-
     determinant(Gender, Number, Determinante, Determinant),
@@ -536,6 +543,19 @@ adjective(male, singular, 'azul', 'blue').
 adjective(male, singular, 'lento', 'slow').
 adjective(female, singular, 'lenta', 'slow').
 adjective(female, singular, 'logica', 'logic').
+
+
+%_____________________________________________
+% pre_noun_adjective: Creates correspondence between a grammar pre noun adjective (hyperbaton) in Spanish and English.
+%
+% Structure: pre_noun_adjective(Gender, Number, ESP, ENG)
+%
+% Params: Gender - grammatical gender of the grammar particle
+%         Number - grammatical number of the grammar particle
+%         ESP - word in spanish
+%         ENG - word in english
+%_____________________________________________
+pre_noun_adjective(male, plural, 'primeros', 'first').
 
 
 %_____________________________________________
