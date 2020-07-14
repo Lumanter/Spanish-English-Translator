@@ -198,6 +198,12 @@ noun_core([Determinante, Sujeto, Adjetivo_1, Adjetivo_2|ESP_rest], ESP_rest, [De
     adjective(Gender, Number, Adjetivo_2, Adjective_2).
 
 
+% noun_core -> determinant, subject_compound
+noun_core([Determinante, Sujeto_1, Adverbio, Sujeto_2|ESP_rest], ESP_rest, [Determinant, Subject_2, Subject_1|ENG_rest], ENG_rest, Number, third, Gender):-
+    determinant(Gender, Number, Determinante, Determinant),
+    subject_compound(Gender, Number, Sujeto_1, Adverbio, Sujeto_2, Subject_2, Subject_1). 
+
+
 % noun_core -> determinant, subject, adjective
 noun_core([Determinante, Sujeto, Adjetivo|ESP_rest], ESP_rest, [Determinant, Adjective, Subject|ENG_rest], ENG_rest, Number, third, Gender):-
     determinant(Gender, Number, Determinante, Determinant),
@@ -224,6 +230,12 @@ noun_core([Sujeto, Adjetivo_1, Adjetivo_2|ESP_rest], ESP_rest, [Adjective_1, Adj
     subject(Gender, Number, Sujeto, Subject),
     adjective(Gender, Number, Adjetivo_1, Adjective_1),
     adjective(Gender, Number, Adjetivo_2, Adjective_2).
+
+
+% noun_core -> subject_compound
+noun_core([ Sujeto_1, Adverbio, Sujeto_2|ESP_rest], ESP_rest, [Subject_2, Subject_1|ENG_rest], ENG_rest, Number, third, Gender):-
+    subject_compound(Gender, Number, Sujeto_1, Adverbio, Sujeto_2, Subject_2, Subject_1). 
+
 
 
 % noun_core -> subject, adjective
@@ -295,14 +307,23 @@ noun_complement(ESP, ESP_rest, ENG, ENG_rest, _, _, _):-
 %         Gender - grammatical gender of the grammar particle
 %_____________________________________________
 % phrase_verb -> verb_core, verb_complement
+% with verb to be, matches phrase_noun and adjective gender
 phrase_verb(ESP, ESP_rest, ENG, ENG_rest, Number, Person, Gender):-
-    verb_core(ESP, ESP_mid_rest, ENG, ENG_mid_rest, Number, Person, Gender),
-    verb_complement(ESP_mid_rest, ESP_rest, ENG_mid_rest, ENG_rest, Number, Person).
+    verb_core(ESP, ESP_mid_rest, ENG, ENG_mid_rest, Number, Person, Verb),
+    verb_to_be(Verb),
+    verb_complement(ESP_mid_rest, ESP_rest, ENG_mid_rest, ENG_rest, Number, Person, Gender).
 
 
-% verb -> verb_core
+
+% phrase_verb -> verb_core, verb_complement
 phrase_verb(ESP, ESP_rest, ENG, ENG_rest, Number, Person, Gender):-
-    verb_core(ESP, ESP_rest, ENG, ENG_rest, Number, Person, Gender).
+    verb_core(ESP, ESP_mid_rest, ENG, ENG_mid_rest, Number, Person, _),
+    verb_complement(ESP_mid_rest, ESP_rest, ENG_mid_rest, ENG_rest, Number, Person, Gender).
+
+
+% phrase_verb -> verb_core
+phrase_verb(ESP, ESP_rest, ENG, ENG_rest, Number, Person, _):-
+    verb_core(ESP, ESP_rest, ENG, ENG_rest, Number, Person, _).
 
 
 
@@ -316,31 +337,23 @@ phrase_verb(ESP, ESP_rest, ENG, ENG_rest, Number, Person, Gender):-
 %         ENG_rest - output word list in english, used to traverse the english input list
 %         Number - grammatical number of the grammar particle
 %         Person - grammatical person of the grammar particle
-%         Gender - grammatical gender of the grammar particle
+%         Verb - the matched verb in english (used for verb to be check)
 %_____________________________________________
-% verb_core -> verb, adjective
+% verb_core -> verb
 % with verb to be, matches phrase_noun and adjective gender
-verb_core([Verbo, Adjetivo|ESP_rest], ESP_rest, [Verb, Adjective|ENG_rest], ENG_rest, Number, Person, Gender):-
+verb_core([Verbo|ESP_rest], ESP_rest, [Verb|ENG_rest], ENG_rest, Number, Person, Verb):-
     verb(Number, Person, _, Verbo, Verb),
-    verb_to_be(Verb),
-    adjective(Gender, Number, Adjetivo, Adjective).
-
-
-% verb_core -> verb, adjective
-verb_core([Verbo, Adjetivo|ESP_rest], ESP_rest, [Verb, Adjective|ENG_rest], ENG_rest, Number, Person, _):-
-    verb(Number, Person, _, Verbo, Verb),
-    adjective(_, Number, Adjetivo, Adjective).
-
-
-% verb_core -> verb, phrase_adjective
-verb_core([Verbo|ESP_mid_rest], ESP_rest, [Verb|ENG_mid_rest], ENG_rest, Number, Person, _):-
-    verb(Number, Person, _, Verbo, Verb),
-    phrase_adjective(ESP_mid_rest, ESP_rest, ENG_mid_rest, ENG_rest, _, _).
+    verb_to_be(Verb).
 
 
 % verb_core -> verb
-verb_core([Verbo|ESP_rest], ESP_rest, [Verb|ENG_rest], ENG_rest, Number, Person, _):-
+verb_core([Verbo|ESP_rest], ESP_rest, [Verb|ENG_rest], ENG_rest, Number, Person, Verb):-
     verb(Number, Person, _, Verbo, Verb).
+
+
+% verb_core -> verb_exception
+verb_core([Verbo|ESP_rest], ESP_rest, [Pronoun, Verb|ENG_rest], ENG_rest, Number, Person, Verb):-
+    verb_exception(Number, Person, _, Verbo, Pronoun, Verb).
 
 
 
@@ -354,20 +367,26 @@ verb_core([Verbo|ESP_rest], ESP_rest, [Verb|ENG_rest], ENG_rest, Number, Person,
 %         ENG_rest - output word list in english, used to traverse the english input list
 %         Number - grammatical number of the grammar particle
 %         Person - grammatical person of the grammar particle
+%         Gender - grammatical gender of the grammar particle
 %_____________________________________________
 % verb_complement -> phrase_noun
-verb_complement(ESP, ESP_rest, ENG, ENG_rest, Number, Person):-
-    phrase_noun(ESP, ESP_rest, ENG, ENG_rest, Number, Person, _).
+verb_complement(ESP, ESP_rest, ENG, ENG_rest, Number, _, _):-
+    phrase_noun(ESP, ESP_rest, ENG, ENG_rest, Number, _, _).
 
 
 % verb_complement -> phrase_adverb
-verb_complement(ESP, ESP_rest, ENG, ENG_rest, _, _):-
+verb_complement(ESP, ESP_rest, ENG, ENG_rest, _, _, _):-
     phrase_adverb(ESP, ESP_rest, ENG, ENG_rest).
 
 
 % verb_complement -> phrase_preposition
-verb_complement(ESP, ESP_rest, ENG, ENG_rest, _, _):-
+verb_complement(ESP, ESP_rest, ENG, ENG_rest, _, _, _):-
     phrase_preposition(ESP, ESP_rest, ENG, ENG_rest).
+
+
+% verb_complement -> phrase_adjective
+verb_complement(ESP, ESP_rest, ENG, ENG_rest, Number, _, Gender):-
+    phrase_adjective(ESP, ESP_rest, ENG, ENG_rest, Gender, Number).
 
 
 
@@ -454,11 +473,6 @@ preposition_complement(ESP, ESP_rest, ENG, ENG_rest):-
     phrase_adverb(ESP, ESP_rest, ENG, ENG_rest).
 
 
-% preposition_complement -> phrase_adverb
-preposition_complement(ESP, ESP_rest, ENG, ENG_rest):-
-    phrase_adjective(ESP, ESP_rest, ENG, ENG_rest, _, _).
-
-
 
 %_____________________________________________
 % phrase_adjective: Translates an adjective phrase (sintagma adjectival in spanish), 
@@ -469,17 +483,17 @@ preposition_complement(ESP, ESP_rest, ENG, ENG_rest):-
 %         ENG - input word list in english
 %         ENG_rest - output word list in english, used to traverse the english input list
 %         Gender - grammatical gender of the grammar particle
-%         Person - grammatical person of the grammar particle
+%         Number - grammatical number of the grammar particle
 %_____________________________________________
 % phrase_adjective -> adjective_core
-phrase_adjective(ESP, ESP_rest, ENG, ENG_rest, Gender, Person):-
-    adjective_core(ESP, ESP_mid_rest, ENG, ENG_mid_rest, Gender, Person),
+phrase_adjective(ESP, ESP_rest, ENG, ENG_rest, Gender, Number):-
+    adjective_core(ESP, ESP_mid_rest, ENG, ENG_mid_rest, Gender, Number),
     phrase_preposition(ESP_mid_rest, ESP_rest, ENG_mid_rest, ENG_rest).
 
 
 % phrase_adjective -> adjective_core
-phrase_adjective(ESP, ESP_rest, ENG, ENG_rest, Gender, Person):-
-    adjective_core(ESP, ESP_rest, ENG, ENG_rest, Gender, Person).
+phrase_adjective(ESP, ESP_rest, ENG, ENG_rest, Gender, Number):-
+    adjective_core(ESP, ESP_rest, ENG, ENG_rest, Gender, Number).
 
 
 
@@ -491,18 +505,18 @@ phrase_adjective(ESP, ESP_rest, ENG, ENG_rest, Gender, Person):-
 %         ESP_rest - output word list in spanish, used to traverse the spanish input list
 %         ENG (implicit as third parameter) - input word list in english
 %         ENG_rest - output word list in english, used to traverse the english input list
-%         Gender - grammatical gender of the grammar particle
+%         Number - grammatical number of the grammar particle
 %         Person - grammatical person of the grammar particle
 %_____________________________________________
 % adjective_core -> quantifier, adjective
-adjective_core([Cuantificador, Adjetivo|ESP_rest], ESP_rest, [Quantifier, Adjective|ENG_rest], ENG_rest, Gender, Person):-
+adjective_core([Cuantificador, Adjetivo|ESP_rest], ESP_rest, [Quantifier, Adjective|ENG_rest], ENG_rest, Gender, Number):-
     quantifier(Cuantificador, Quantifier),
-    adjective(Gender, Person, Adjetivo, Adjective).
+    adjective(Gender, Number, Adjetivo, Adjective).
 
 
 % adjective_core -> adjective
-adjective_core([Adjetivo|ESP_rest], ESP_rest, [Adjective|ENG_rest], ENG_rest, Gender, Person):-
-    adjective(Gender, Person, Adjetivo, Adjective).
+adjective_core([Adjetivo|ESP_rest], ESP_rest, [Adjective|ENG_rest], ENG_rest, Gender, Number):-
+    adjective(Gender, Number, Adjetivo, Adjective).
 
 
 
@@ -568,11 +582,27 @@ subject(male, singular, 'carro', 'car').
 subject(female, singular, 'linguistica', 'linguistics'). 
 subject(male, singular, 'mono', 'monkey'). 
 subject(male, singular, 'ladron', 'thief'). 
-subject(male, singular, 'lenguaje', 'language'). 
 subject(male, plural, 'lenguajes', 'languages'). 
 subject(female, plural, 'flores', 'flowers'). 
 subject(female, singular, 'pista', 'track'). 
 subject(female, singular, 'programacion', 'programming'). 
+
+
+%_____________________________________________
+% subject_compound: Creates correspondence between a grammar compound subject 
+%                   (more than one word subject that is threated as an individual particle) in Spanish and English.
+%
+% Structure: subject_compound(Gender, Number, Sujeto_1, Adverbio, Sujeto_2, Subject_2, Subject_1)
+%
+% Params: Gender - grammatical gender of the grammar particle
+%         Number - grammatical number of the grammar particle
+%         Sujeto_1 - first subject word in spanish
+%         Adverbio - adverb word in spanish
+%         Sujeto_2 - second subject word in spanish
+%         Subject_2 - second subject word in english
+%         Subject_1 - first subject word in english
+%_____________________________________________
+subject_compound(male, singular, 'lenguaje', 'de', 'programacion', 'programming', 'language'). 
 
 
 %_____________________________________________
@@ -593,6 +623,22 @@ verb(singular, first, present, 'salto', 'jump').
 verb(singular, third, present, 'salta', 'jumps').
 verb(singular, third, present, 'es', 'is').
 verb(plural, third, present, 'son', 'are').
+
+
+%_____________________________________________
+% verb_exception: Creates correspondence between a grammar exception verb 
+%                 (when 2 particles in english correspond to a single word in spanish) in Spanish and English.
+%
+% Structure: verb(Number, Person, Time, verbo, pronoun, verb)
+%
+% Params: Number - grammatical number of the grammar particle
+%         Person - grammatical person of the grammar particle
+%         Time - grammatical time of the grammar particle
+%         verbo - verb word in spanish
+%         pronoun - pronoun word in english
+%         verb - verb word in english
+%_____________________________________________
+verb_exception(singular, third, present, 'es', 'it', 'is').
 
 
 %_____________________________________________
