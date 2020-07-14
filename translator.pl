@@ -365,6 +365,11 @@ verb_complement(ESP, ESP_rest, ENG, ENG_rest, _, _):-
     phrase_adverb(ESP, ESP_rest, ENG, ENG_rest).
 
 
+% verb_complement -> phrase_preposition
+verb_complement(ESP, ESP_rest, ENG, ENG_rest, _, _):-
+    phrase_preposition(ESP, ESP_rest, ENG, ENG_rest).
+
+
 
 %_____________________________________________
 % phrase_adverb: Translates a adverb phrase (sintagma adverbial in spanish), 
