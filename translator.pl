@@ -106,8 +106,8 @@ text_left(ESP, ESP_rest, ENG, ENG_rest):-
 %         ENG_rest - output word list in english, used to traverse the english input list
 %_____________________________________________
 % connector -> punctuation_sign, conjunction
-connector([Signo_puntuacion, Conjuncion|ESP_rest], ESP_rest, [Punctuation_sign, Conjunction|ENG_rest], ENG_rest):-
-    punctuation_sign(Signo_puntuacion, Punctuation_sign),
+connector([Punctuation_sign, Conjuncion|ESP_rest], ESP_rest, [Punctuation_sign, Conjunction|ENG_rest], ENG_rest):-
+    punctuation_sign(Punctuation_sign),
     conjunction(Conjuncion, Conjunction).
 
 
@@ -117,8 +117,8 @@ connector([Conjuncion|ESP_rest], ESP_rest, [Conjunction|ENG_rest], ENG_rest):-
 
 
 % connector -> punctuation_sign
-connector([Signo_puntuacion|ESP_rest], ESP_rest, [Punctuation_sign|ENG_rest], ENG_rest):-
-    punctuation_sign(Signo_puntuacion, Punctuation_sign).
+connector([Punctuation_sign|ESP_rest], ESP_rest, [Punctuation_sign|ENG_rest], ENG_rest):-
+    punctuation_sign(Punctuation_sign).
 
 
 
@@ -145,6 +145,10 @@ phrase(ESP, ESP_rest, ENG, ENG_rest):-
 phrase(ESP, ESP_rest, ENG, ENG_rest):-
     phrase_adverb(ESP, ESP_rest, ENG, ENG_rest).
 
+
+% phrase -> phrase_exclamation
+phrase(ESP, ESP_rest, ENG, ENG_rest):-
+    phrase_exclamation(ESP, ESP_rest, ENG, ENG_rest).
 
 
 %_____________________________________________
@@ -520,6 +524,20 @@ adjective_core([Adjetivo|ESP_rest], ESP_rest, [Adjective|ENG_rest], ENG_rest, Ge
 
 
 
+%_____________________________________________
+% phrase_exclamation: Translates a exclamation phrase, as list of words, 
+%                     from english to spanish and the other way around. 
+%
+% Params: ESP (implicit as first parameter)- input word list in spanish
+%         ESP_rest - output word list in spanish, used to traverse the spanish input list
+%         ENG (implicit as third parameter) - input word list in english
+%         ENG_rest - output word list in english, used to traverse the english input list
+%_____________________________________________
+% phrase_exclamation -> interjection, exclamation_sign
+phrase_exclamation([Interjeccion, '!'|ESP_rest], ESP_rest, [Interjection,'!'|ENG_rest], ENG_rest):-
+    interjection(Interjeccion, Interjection).
+
+
 
 %_____________ Knowledge Database ____________
 
@@ -649,6 +667,7 @@ verb_exception(singular, third, present, 'es', 'it', 'is').
 % Params: Verb - word in english
 %_____________________________________________
 verb_to_be('is').
+verb_to_be('are').
 
 
 %_____________________________________________
@@ -736,13 +755,22 @@ conjunction('y', 'and').
 conjunction('pero', 'but').
 
 %_____________________________________________
-% punctuation_sign: Creates correspondence between a grammar punctuation_sign in Spanish and English. 
-%                   Not really translated but used for the overall translation.
+% punctuation_sign: Indicates a grammar particle as an punctuation_sign. Used for phrase connections.
 %
-% Structure: punctuation_sign(ESP, ENG)
+% Structure: punctuation_sign(Puntuaction_sign)
+%
+% Params: Puntuaction_sign - grammar puntuaction sign used as phrases connector
+%_____________________________________________
+punctuation_sign('.').
+punctuation_sign(',').
+
+
+%_____________________________________________
+% conjunction: Creates correspondence between a grammar interjection in Spanish and English.
+%
+% Structure: interjection(ESP, ENG)
 %
 % Params: ESP - word in spanish
 %         ENG - word in english
 %_____________________________________________
-punctuation_sign('.', '.').
-punctuation_sign(',', ',').
+interjection('hola', 'hello').
