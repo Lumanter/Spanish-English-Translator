@@ -5,6 +5,8 @@
 % translate_ESP: Translates text, with single quotes, from spanish to english. 
 %                Can't be used the other way around due to text to list conversion indefinitions.
 %
+% Structure: translate_ESP(ESP, ENG)
+%
 % Params: ESP - input spanish text
 %         ENG  - output translated english text
 %_____________________________________________
@@ -27,6 +29,8 @@ translate_ESP(ESP, ENG):-
 %_____________________________________________
 % translate_ENG: Translates text, with single quotes, from english to spanish. 
 %                Can't be used the other way around due to text to list conversion indefinitions.
+%
+% Structure: translate_ENG(ENG, ESP)
 %
 % Params: ENG - input english text
 %         ESP  - output translated spanish text
@@ -51,6 +55,8 @@ translate_ENG(ENG, ESP):-
 % word: Translates a single word, with single quotes, 
 %       from english to spanish and the other way around. 
 %
+% Structure: word(ESP, ENG)
+%
 % Params: ESP - word in spanish
 %         ENG  - word in english
 %_____________________________________________
@@ -73,6 +79,8 @@ word(ESP, ENG):- pronoun(_, _, _, ESP, ENG);
 %_____________________________________________
 % translation_text: Translates a list of words from english to spanish,
 %                   and the other way around. 
+%
+% Structure: translation_text(ESP, ESP_rest, ENG, ENG_rest)
 %
 % Params: ESP - input word list in spanish
 %         ESP_rest - output word list in spanish, used to traverse the spanish input list
@@ -99,6 +107,8 @@ text_left(ESP, ESP_rest, ENG, ENG_rest):-
 %_____________________________________________
 % connector: Grammar connector, used to link two grammar phrases. 
 %
+% Structure: connector(ESP, ESP_rest, ENG, ENG_rest)
+%
 % Params: ESP - input word list in spanish
 %         ESP_rest - output word list in spanish, used to traverse the spanish input list
 %         ENG  - input word list in english
@@ -124,6 +134,8 @@ connector([Punctuation_sign|ESP_rest], ESP_rest, [Punctuation_sign|ENG_rest], EN
 %_____________________________________________
 % phrase: Translates a phrase, as list of words, from english to spanish
 %         and the other way around. 
+%
+% Structure: phrase(ESP, ESP_rest, ENG, ENG_rest)
 %
 % Params: ESP - input word list in spanish
 %         ESP_rest - output word list in spanish, used to traverse the spanish input list
@@ -154,6 +166,8 @@ phrase(ESP, ESP_rest, ENG, ENG_rest):-
 % phrase_noun: Translates a noun phrase (sintagma nominal in spanish), as list of words, 
 %              from english to spanish and the other way around. 
 %
+% Structure: phrase_noun(ESP, ESP_rest, ENG, ENG_rest, Number, Person, Gender)
+%
 % Params: ESP - input word list in spanish
 %         ESP_rest - output word list in spanish, used to traverse the spanish input list
 %         ENG  - input word list in english
@@ -176,6 +190,8 @@ phrase_noun(ESP, ESP_rest, ENG, ENG_rest, Number, Person, Gender):-
 %_____________________________________________
 % noun_core: Translates the core of the noun phrase (sintagma nominal in spanish), as list of words, 
 %            from english to spanish and the other way around. 
+%
+% Structure: noun_core(ESP, ESP_rest, ENG, ENG_rest, Number, Person, Gender)
 %
 % Params: ESP (implicit as first parameter) - input word list in spanish
 %         ESP_rest - output word list in spanish, used to traverse the spanish input list
@@ -273,6 +289,8 @@ noun_core([Nombre_propio|ESP_rest], ESP_rest, [Proper_noun|ENG_rest], ENG_rest, 
 % noun_complement: Translates the complement of the noun phrase (sintagma nominal in spanish), 
 %                  as list of words, from english to spanish and the other way around. 
 %
+% Structure: noun_complement(ESP, ESP_rest, ENG, ENG_rest, Number, Person, Gender)
+%
 % Params: ESP - input word list in spanish
 %         ESP_rest - output word list in spanish, used to traverse the spanish input list
 %         ENG - input word list in english
@@ -300,6 +318,8 @@ noun_complement(ESP, ESP_rest, ENG, ENG_rest, _, _, _):-
 %_____________________________________________
 % phrase_verb: Translates a verb phrase (sintagma verbal in spanish), 
 %              as list of words, from english to spanish and the other way around. 
+%
+% Structure: phrase_verb(ESP, ESP_rest, ENG, ENG_rest, Number, Person, Gender)
 %
 % Params: ESP (implicit as first parameter) - input word list in spanish
 %         ESP_rest - output word list in spanish, used to traverse the spanish input list
@@ -333,6 +353,8 @@ phrase_verb(ESP, ESP_rest, ENG, ENG_rest, Number, Person, _):-
 %_____________________________________________
 % verb_core: Translates the core of the verb phrase (sintagma verbal in spanish), as list of words, 
 %            from english to spanish and the other way around. 
+%
+% Structure: verb_core(ESP, ESP_rest, ENG, ENG_rest, Number, Person, Verb)
 %
 % Params: ESP (implicit as first parameter) - input word list in spanish
 %         ESP_rest - output word list in spanish, used to traverse the spanish input list
@@ -403,6 +425,8 @@ verb_conjugated([Verbo_Accion|ESP_rest], ESP_rest, [Verb_1, Verb_action|ENG_rest
 % verb_complement: Translates the complement of the verb phrase (sintagma verbal in spanish), 
 %                  as list of words, from english to spanish and the other way around. 
 %
+% Structure: verb_complement(ESP, ESP_rest, ENG, ENG_rest, Number, Person, Gender)
+%
 % Params: ESP - input word list in spanish
 %         ESP_rest - output word list in spanish, used to traverse the spanish input list
 %         ENG - input word list in english
@@ -436,6 +460,8 @@ verb_complement(ESP, ESP_rest, ENG, ENG_rest, Number, _, Gender):-
 % phrase_adverb: Translates a adverb phrase (sintagma adverbial in spanish), 
 %              as list of words, from english to spanish and the other way around. 
 %
+% Structure: phrase_adverb(ESP, ESP_rest, ENG, ENG_rest)
+%
 % Params: ESP - input word list in spanish
 %         ESP_rest - output word list in spanish, used to traverse the spanish input list
 %         ENG - input word list in english
@@ -463,6 +489,8 @@ phrase_adverb(ESP, ESP_rest, ENG, ENG_rest):-
 % adverb_core: Translates the core of a adverb phrase (sintagma adverbial in spanish), 
 %              as list of words, from english to spanish and the other way around. 
 %
+% Structure: adverb_core(ESP, ESP_rest, ENG, ENG_rest)
+%
 % Params: ESP (implicit as first parameter) - input word list in spanish
 %         ESP_rest - output word list in spanish, used to traverse the spanish input list
 %         ENG (implicit as third parameter) - input word list in english
@@ -484,6 +512,8 @@ adverb_core([Adverbio|ESP_rest], ESP_rest, [Adverb|ENG_rest], ENG_rest):-
 % phrase_preposition: Translates a preposition phrase (sintagma preposicional in spanish), 
 %                     as list of words, from english to spanish and the other way around. 
 %
+% Structure: phrase_preposition(ESP, ESP_rest, ENG, ENG_rest)
+%
 % Params: ESP (implicit as first parameter) - input word list in spanish
 %         ESP_rest - output word list in spanish, used to traverse the spanish input list
 %         ENG (implicit as third parameter) - input word list in english
@@ -499,6 +529,8 @@ phrase_preposition([Preposicion|ESP_mid_rest], ESP_rest, [Preposition|ENG_mid_re
 %_____________________________________________
 % preposition_complement: Translates the complement of a preposition phrase (sintagma preposicional in spanish), 
 %                         as list of words, from english to spanish and the other way around. 
+%
+% Structure: preposition_complement(ESP, ESP_rest, ENG, ENG_rest)
 %
 % Params: ESP - input word list in spanish
 %         ESP_rest - output word list in spanish, used to traverse the spanish input list
@@ -519,6 +551,8 @@ preposition_complement(ESP, ESP_rest, ENG, ENG_rest):-
 %_____________________________________________
 % phrase_adjective: Translates an adjective phrase (sintagma adjectival in spanish), 
 %                   as list of words, from english to spanish and the other way around. 
+%
+% Structure: phrase_adjective(ESP, ESP_rest, ENG, ENG_rest, Gender, Number)
 %
 % Params: ESP - input word list in spanish
 %         ESP_rest - output word list in spanish, used to traverse the spanish input list
@@ -543,12 +577,14 @@ phrase_adjective(ESP, ESP_rest, ENG, ENG_rest, Gender, Number):-
 % adjective_core: Translates the core of an adjective phrase (sintagma adjectival in spanish), 
 %                 as list of words, from english to spanish and the other way around. 
 %
+% Structure: adjective_core(ESP, ESP_rest, ENG, ENG_rest, Gender, Number)
+%
 % Params: ESP (implicit as first parameter) - input word list in spanish
 %         ESP_rest - output word list in spanish, used to traverse the spanish input list
 %         ENG (implicit as third parameter) - input word list in english
 %         ENG_rest - output word list in english, used to traverse the english input list
+%         Gender - grammatical gender of the grammar particle
 %         Number - grammatical number of the grammar particle
-%         Person - grammatical person of the grammar particle
 %_____________________________________________
 % adjective_core -> quantifier, adjective
 adjective_core([Cuantificador, Adjetivo|ESP_rest], ESP_rest, [Quantifier, Adjective|ENG_rest], ENG_rest, Gender, Number):-
@@ -565,6 +601,8 @@ adjective_core([Adjetivo|ESP_rest], ESP_rest, [Adjective|ENG_rest], ENG_rest, Ge
 %_____________________________________________
 % phrase_exclamation: Translates a exclamation phrase, as list of words, 
 %                     from english to spanish and the other way around. 
+%
+% Structure: phrase_exclamation(ESP, ESP_rest, ENG, ENG_rest)
 %
 % Params: ESP (implicit as first parameter)- input word list in spanish
 %         ESP_rest - output word list in spanish, used to traverse the spanish input list
