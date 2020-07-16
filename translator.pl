@@ -66,8 +66,7 @@ word(ESP, ENG):- pronoun(_, _, _, ESP, ENG);
                  preposition(ESP, ENG);
                  quantifier(ESP, ENG);
                  adverb(ESP, ENG);
-                 conjunction(ESP, ENG);
-                 punctuation_sign(ESP, ENG). 
+                 conjunction(ESP, ENG).
 
 
 
@@ -343,6 +342,11 @@ phrase_verb(ESP, ESP_rest, ENG, ENG_rest, Number, Person, _):-
 %         Person - grammatical person of the grammar particle
 %         Verb - the matched verb in english (used for verb to be check)
 %_____________________________________________
+% verb_core -> verb_conjugated
+verb_core(ESP, ESP_rest, ENG, ENG_rest, Number, Person, _):-
+    verb_conjugated(ESP, ESP_rest, ENG, ENG_rest, Number, Person, _).
+
+
 % verb_core -> verb
 % with verb to be, matches phrase_noun and adjective gender
 verb_core([Verbo|ESP_rest], ESP_rest, [Verb|ENG_rest], ENG_rest, Number, Person, Verb):-
@@ -359,6 +363,40 @@ verb_core([Verbo|ESP_rest], ESP_rest, [Verb|ENG_rest], ENG_rest, Number, Person,
 verb_core([Verbo|ESP_rest], ESP_rest, [Pronoun, Verb|ENG_rest], ENG_rest, Number, Person, Verb):-
     verb_exception(Number, Person, _, Verbo, Pronoun, Verb).
 
+
+
+%_____________________________________________
+% verb_conjugated: Translates a conjutated verb, as list of words, 
+%                  from english to spanish and the other way around. 
+%
+% Structure: verb_conjugated(ESP, ESP_rest, ENG, ENG_rest, Number, Person, Time)
+%
+% Params: ESP (implicit as first parameter) - input word list in spanish
+%         ESP_rest - output word list in spanish, used to traverse the spanish input list
+%         ENG (implicit as third parameter) - input word list in english
+%         ENG_rest - output word list in english, used to traverse the english input list
+%         Number - grammatical number of the grammar particle
+%         Person - grammatical person of the grammar particle
+%         Time - grammatical time of the grammar particle
+%_____________________________________________
+% verb_conjugated -> verb_conjugated_3x3
+verb_conjugated([Verbo_1, Verbo_2, Verbo_Accion|ESP_rest], ESP_rest, [Verb_1, Verb_2, Verb_action|ENG_rest], ENG_rest, Number, Person, Time):-
+    verb_conjugated_3x3(Number, Person, Time, Verbo_1, Verbo_2, Verbo_Accion, Verb_1, Verb_2, Verb_action).
+
+
+% verb_conjugated -> verb_conjugated_2x3
+verb_conjugated([Verbo_1, Verbo_Accion|ESP_rest], ESP_rest, [Verb_1, Verb_2, Verb_action|ENG_rest], ENG_rest, Number, Person, Time):-
+    verb_conjugated_2x3(Number, Person, Time, Verbo_1, Verbo_Accion, Verb_1, Verb_2, Verb_action).
+
+
+% verb_conjugated -> verb_conjugated_2x2
+verb_conjugated([Verbo_1, Verbo_Accion|ESP_rest], ESP_rest, [Verb_1, Verb_action|ENG_rest], ENG_rest, Number, Person, Time):-
+    verb_conjugated_2x2(Number, Person, Time, Verbo_1, Verbo_Accion, Verb_1, Verb_action).
+
+
+% verb_conjugated -> verb_conjugated_2x2
+verb_conjugated([Verbo_Accion|ESP_rest], ESP_rest, [Verb_1, Verb_action|ENG_rest], ENG_rest, Number, Person, Time):-
+    verb_conjugated_2x1(Number, Person, Time, Verbo_Accion, Verb_1, Verb_action).
 
 
 %_____________________________________________
@@ -571,6 +609,7 @@ determinant(female, plural, 'las', 'the').
 pronoun(female, singular, third, 'ella', 'she').
 pronoun(_, singular, first, 'yo', 'i').
 pronoun(male, singular, third, 'uno', 'one').
+pronoun(male, plural, third, 'ellos', 'they').
 
 
 %_____________________________________________
@@ -641,6 +680,77 @@ verb(singular, first, present, 'salto', 'jump').
 verb(singular, third, present, 'salta', 'jumps').
 verb(singular, third, present, 'es', 'is').
 verb(plural, third, present, 'son', 'are').
+
+
+%_____________________________________________
+% verb_conjugated_3x3: Creates correspondence between a 3x3 particles translation relationship 
+%                      in a conjugated verb in Spanish and English.
+%
+% Structure: verb_conjugated_3x3(Number, Person, Time, Verbo_1, Verbo_2, Verbo_Accion, Verb_1, Verb_2, Verb_action)
+%
+% Params: Number - grammatical number of the grammar particle
+%         Person - grammatical person of the grammar particle
+%         Time - grammatical time of the grammar particle
+%         Verbo_1 - first verb in spanish
+%         Verbo_2 - second verb in spanish
+%         Verbo_Accion - action verb in spanish
+%         Verb_1 - first verb in english
+%         Verb_2 - second verb in english
+%         Verb_Action - action verb in english
+%_____________________________________________
+verb_conjugated_3x3(singular, third, past, 'ha', 'estado', 'corriendo', 'has', 'been', 'running').
+
+
+%_____________________________________________
+% verb_conjugated_2x3: Creates correspondence between a 2x3 particles translation relationship 
+%                      in a conjugated verb in Spanish and English.
+%
+% Structure: verb_conjugated_2x3(Number, Person, Time, Verbo_1, Verbo_Accion, Verb_1, Verb_2, Verb_action)
+%
+% Params: Number - grammatical number of the grammar particle
+%         Person - grammatical person of the grammar particle
+%         Time - grammatical time of the grammar particle
+%         Verbo_1 - first verb in spanish
+%         Verbo_Accion - action verb in spanish
+%         Verb_1 - first verb in english
+%         Verb_2 - second verb in english
+%         Verb_Action - action verb in english
+%_____________________________________________
+verb_conjugated_2x3(singular, third, future, 'estara*', 'trabajando', 'will', 'be', 'working').
+
+
+%_____________________________________________
+% verb_conjugated_2x2: Creates correspondence between a 2x2 particles translation relationship 
+%                      in a conjugated verb in Spanish and English.
+%
+% Structure: verb_conjugated_2x2(Number, Person, Time, Verbo_1, Verbo_Accion, Verb_1, Verb_action)
+%
+% Params: Number - grammatical number of the grammar particle
+%         Person - grammatical person of the grammar particle
+%         Time - grammatical time of the grammar particle
+%         Verbo_1 - first verb in spanish
+%         Verbo_Accion - action verb in spanish
+%         Verb_1 - first verb in english
+%         Verb_Action - action verb in english
+%_____________________________________________
+verb_conjugated_2x2(singular, first, present, 'estoy', 'trabajando', 'am', 'working').
+verb_conjugated_2x2(singular, third, present, 'esta*', 'corriendo', 'is', 'running').
+
+
+%_____________________________________________
+% verb_conjugated_2x1: Creates correspondence between a 2x1 particles translation relationship 
+%                      in a conjugated verb in Spanish and English.
+%
+% Structure: verb_conjugated_2x1(Number, Person, Time, Verbo_Accion, Verb_1, Verb_action)
+%
+% Params: Number - grammatical number of the grammar particle
+%         Person - grammatical person of the grammar particle
+%         Time - grammatical time of the grammar particle
+%         Verbo_Accion - action verb in spanish
+%         Verb_1 - first verb in english
+%         Verb_Action - action verb in english
+%_____________________________________________
+verb_conjugated_2x1(plural, third, future, 'correra*n', 'will', 'run').
 
 
 %_____________________________________________
