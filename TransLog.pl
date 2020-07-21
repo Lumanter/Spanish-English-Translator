@@ -204,8 +204,8 @@ sub_menu_option_1('spanish', "-Ingrese 1. para traducir de español a ingles").
 sub_menu_option_2('english', "-Enter 2. for translating from english to spanish").
 sub_menu_option_2('spanish', "-Ingrese 2. para traducir de ingles a español").
 
-sub_menu_option_3('english', "-Enter 3. for returning to the main menu").
-sub_menu_option_3('spanish', "-Ingrese 3. para returnar al menu principal").
+sub_menu_option_3('english', "-Enter 3. for returning to the lenguage selection").
+sub_menu_option_3('spanish', "-Ingrese 3. para returnar a la selección de lenguaje").
 
 %_____________________________________________
 % translate_language_loader: Loads the text in the translate menu.
