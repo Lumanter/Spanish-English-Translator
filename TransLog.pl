@@ -9,11 +9,11 @@
 %_____________________________________________
 transLog:-
     nl,
-    write("Welcome to TransLog/Bienvenido a TransLog"),
+    write("Welcome to TransLog / Bienvenido a TransLog"),
     nl,
-    write("-For english please enter the number 1 followed by a period (.)"),
+    write("-Please enter 1. for english"),
     nl,
-    write("-Para español favor ingresar el número 2 seguido de un punto (.)"),
+    write("-Porfavor digite 2. para español"),
     nl,
     read(Input),
     nl,
@@ -118,7 +118,7 @@ ask_translate_ESP(Language, _):-fail_translation(Language),
 %         Output - Result received by module translator.pl
 %_____________________________________________
 
-ask_translate_ENG(Language,'salir'):-
+ask_translate_ENG(Language,'exit'):-
     nl,
     closing_language_loader(Language, [Session_Message, Session_Back_To_Menu]),
     write(Session_Message),
@@ -198,14 +198,14 @@ sub_menu_language_loader(Language, [Main_Message, Option_1, Option_2, Option_3])
 sub_menu_main_message('english', "Which language would you like to translate to?").
 sub_menu_main_message('spanish', "A que lenguaje desea traducir").
 
-sub_menu_option_1('english', "-Enter 1 for translating from spanish to english").
-sub_menu_option_1('spanish', "-Ingrese 1 para traducir de español a ingles").
+sub_menu_option_1('english', "-Enter 1. for translating from spanish to english").
+sub_menu_option_1('spanish', "-Ingrese 1. para traducir de español a ingles").
 
-sub_menu_option_2('english', "-Enter 2 for translating from english to spanish").
-sub_menu_option_2('spanish', "-Ingrese 2 para traducir de ingles a español").
+sub_menu_option_2('english', "-Enter 2. for translating from english to spanish").
+sub_menu_option_2('spanish', "-Ingrese 2. para traducir de ingles a español").
 
-sub_menu_option_3('english', "-Enter 3 for returning to the main menu").
-sub_menu_option_3('spanish', "-Ingrese 3 para returnar al menu principal").
+sub_menu_option_3('english', "-Enter 3. for returning to the main menu").
+sub_menu_option_3('spanish', "-Ingrese 3. para returnar al menu principal").
 
 %_____________________________________________
 % translate_language_loader: Loads the text in the translate menu.
@@ -224,14 +224,14 @@ translate_language_loader(Language, Main_Message):-
 %_____________________________________________
 % translateMenu Database
 %_____________________________________________
-translate_english_option('english', 'english', "Enter the word, sentence or phrase the you wanna to translate to english").
-translate_english_option('english', 'spanish', "Ingrese la palabra, oración o párafo que desea traducir al ingles").
+translate_english_option('english', 'english', "Enter the word, sentence or phrase that you want to translate to english inside sinlge quotes and followed by a period").
+translate_english_option('english', 'spanish', "Ingrese la palabra, oración o párafo que desea traducir al ingles dentro de comillas simples seguido de un punto").
 
-translate_spanish_option('spanish', 'english', "Enter the word, sentence or phrase that you wanna to translate to spanish").
-translate_spanish_option('spanish', 'spanish', "Ingrese la palabra, oración o párafo que desea traducir al español").
+translate_spanish_option('spanish', 'english', "Enter the word, sentence or phrase that you want to translate to english inside sinlge quotes and followed by a period").
+translate_spanish_option('spanish', 'spanish', "Ingrese la palabra, oración o párafo que desea traducir al ingles dentro de comillas simples seguido de un punto").
 
-translate_exit_option('english', "Returning to main menu...").
-translate_exit_option('spanish', "Regresando al menu principal...").
+translate_exit_option('english', "Returning to the first menu...").
+translate_exit_option('spanish', "Regresando al primer menu...").
 
 translate_default_option('english', "Please choice between one of the three given options").
 translate_default_option('spanish', "Por favor eliga entre una de las tres opciones dadas").
@@ -250,11 +250,11 @@ closing_language_loader(Language, [Session_Message, Session_Back_To_Menu]):-
 %_____________________________________________
 % closing_session Database
 %_____________________________________________
-closing_session_message('english', "This traslating sesion has been closed").
+closing_session_message('english', "This traslating session has been closed").
 closing_session_message('spanish', "Esta sesión de traducción se ha cerrado").
 
-closing_session_back_to_menu('english', "Returning to main menu...").
-closing_session_back_to_menu('spanish', "Regresando al menu principal...").
+closing_session_back_to_menu('english', "Returning to the first menu...").
+closing_session_back_to_menu('spanish', "Regresando al primer menu...").
 
 %_____________________________________________
 % fail_translation_language_loader: Loads the text in the fail
@@ -275,5 +275,5 @@ fail_translation_message('spanish', "No ha sido posible traducir la entrada dada
 write_translation_language_loader(Language, Message):-
     write_translation_message(Language, Message).
 
-write_translation_message('english', "Enter another word, sentence or paragraph to translate or enter the word 'salir' to exit to main menu").
-write_translation_message('spanish', "Ingrese otra palabra, oración o párafo para traducir o bien, ingrese la palabra 'salir' para ir al menu principal").
+write_translation_message('english', "Enter another word, sentence or paragraph to translate or enter the word 'exit' to exit to first menu").
+write_translation_message('spanish', "Ingrese otra palabra, oración o párafo para traducir o bien, ingrese la palabra 'salir' para ir al primer menu").
