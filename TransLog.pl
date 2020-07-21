@@ -95,14 +95,14 @@ fail_translation(Language):-
 %         Output - Result received by module translator.pl
 %_____________________________________________
 
-ask_translate_ESP(Language,'salir'):-
+ask_translate_ESP(Language,'exit'):-
     nl,
     closing_language_loader(Language, [Session_Message, Session_Back_To_Menu]),
     write(Session_Message),
     nl,
     write(Session_Back_To_Menu),
     nl,
-    transLog.
+    subMenu(Language).
 ask_translate_ESP(Language,Input):-translate_ESP(Input, Output),
     write_translate_ESP(Language, Output),
     !.
@@ -118,14 +118,14 @@ ask_translate_ESP(Language, _):-fail_translation(Language),
 %         Output - Result received by module translator.pl
 %_____________________________________________
 
-ask_translate_ENG(Language,'exit'):-
+ask_translate_ENG(Language,'salir'):-
     nl,
     closing_language_loader(Language, [Session_Message, Session_Back_To_Menu]),
     write(Session_Message),
     nl,
     write(Session_Back_To_Menu),
     nl,
-    transLog.
+    subMenu(Language).
 ask_translate_ENG(Language,Input):-translate_ENG(Output, Input),
     write_translate_ENG(Language, Output),
     !.
