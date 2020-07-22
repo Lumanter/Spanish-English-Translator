@@ -13,7 +13,7 @@ transLog:-
     nl,
     write("-Please enter 1. for english"),
     nl,
-    write("-Porfavor digite 2. para español"),
+    write("-Por favor digite 2. para español"),
     nl,
     read(Input),
     nl,
@@ -196,7 +196,7 @@ sub_menu_language_loader(Language, [Main_Message, Option_1, Option_2, Option_3])
 % SubMenu Database
 %_____________________________________________
 sub_menu_main_message('english', "Which language would you like to translate to?").
-sub_menu_main_message('spanish', "A que lenguaje desea traducir").
+sub_menu_main_message('spanish', "¿A que lenguaje desea traducir?").
 
 sub_menu_option_1('english', "-Enter 1. for translating from spanish to english").
 sub_menu_option_1('spanish', "-Ingrese 1. para traducir de español a ingles").
@@ -224,17 +224,17 @@ translate_language_loader(Language, Main_Message):-
 %_____________________________________________
 % translateMenu Database
 %_____________________________________________
-translate_english_option('english', 'english', "Enter the word, sentence or phrase that you want to translate to english inside sinlge quotes and followed by a period").
-translate_english_option('english', 'spanish', "Ingrese la palabra, oración o párafo que desea traducir al ingles dentro de comillas simples seguido de un punto").
+translate_english_option('english', 'english', "Enter the word, sentence or phrase that you want to translate to english inside single quotes and followed by a period or enter 'exit'. to go to the menu").
+translate_english_option('english', 'spanish', "Ingrese la palabra, oración o párrafo que desea traducir al ingles dentro de comillas simples seguido de un punto o bien, digite 'salir'. para ir al menu").
 
-translate_spanish_option('spanish', 'english', "Enter the word, sentence or phrase that you want to translate to english inside sinlge quotes and followed by a period").
-translate_spanish_option('spanish', 'spanish', "Ingrese la palabra, oración o párafo que desea traducir al ingles dentro de comillas simples seguido de un punto").
+translate_spanish_option('spanish', 'english', "Enter the word, sentence or phrase that you want to translate to english inside single quotes and followed by a period").
+translate_spanish_option('spanish', 'spanish', "Ingrese la palabra, oración o párrafo que desea traducir al ingles dentro de comillas simples seguido de un punto o bien, digite 'salir'. para ir al menu").
 
-translate_exit_option('english', "Returning to the first menu...").
-translate_exit_option('spanish', "Regresando al primer menu...").
+translate_exit_option('english', "Returning to the menu...").
+translate_exit_option('spanish', "Regresando al menu...").
 
-translate_default_option('english', "Please choice between one of the three given options").
-translate_default_option('spanish', "Por favor eliga entre una de las tres opciones dadas").
+translate_default_option('english', "Please choose between one of the three options").
+translate_default_option('spanish', "Por favor eliga entre una de las tres opciones").
 
 %_____________________________________________
 % closing_language_loader: Loads the text in the closing screen
@@ -253,8 +253,8 @@ closing_language_loader(Language, [Session_Message, Session_Back_To_Menu]):-
 closing_session_message('english', "This traslating session has been closed").
 closing_session_message('spanish', "Esta sesión de traducción se ha cerrado").
 
-closing_session_back_to_menu('english', "Returning to the first menu...").
-closing_session_back_to_menu('spanish', "Regresando al primer menu...").
+closing_session_back_to_menu('english', "Returning...").
+closing_session_back_to_menu('spanish', "Regresando...").
 
 %_____________________________________________
 % fail_translation_language_loader: Loads the text in the fail
@@ -275,5 +275,5 @@ fail_translation_message('spanish', "No ha sido posible traducir la entrada dada
 write_translation_language_loader(Language, Message):-
     write_translation_message(Language, Message).
 
-write_translation_message('english', "Enter another word, sentence or paragraph to translate or enter the word 'exit' to exit to first menu").
-write_translation_message('spanish', "Ingrese otra palabra, oración o párafo para traducir o bien, ingrese la palabra 'salir' para ir al primer menu").
+write_translation_message('english', "Enter another word, sentence or paragraph inside single quotes and followed by a period to translate or enter 'exit'. to go to the menu").
+write_translation_message('spanish', "Ingrese otra palabra, oración o párafo para traducir dentro de comillas simples seguido de un punto o bien, digite 'salir'. para ir al menu").
