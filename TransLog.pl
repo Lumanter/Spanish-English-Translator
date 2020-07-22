@@ -51,6 +51,12 @@ subMenu(Language):-
     language_code_converter(Input, Chosen_Language),
     translate(Chosen_Language, Language).
 
+subMenu(_):-
+    nl,
+    write("Please enter only 1. or 2./ Favor ingresar únicamente 1. o 2."),
+    nl,
+    transLog.
+
 
 %_____________________________________________
 % translate: Secondary loop for translating spanish and english.
@@ -66,6 +72,7 @@ translate('english', Language):-
     write(Main_Message),
     nl,
     read(Input),
+    \+ Input = end_of_file,
     nl,
     ask_translate_ESP(Language, Input).
 translate('spanish', Language):-
@@ -74,6 +81,7 @@ translate('spanish', Language):-
     write(Main_Message),
     nl,
     read(Input),
+    \+ Input = end_of_file,
     nl,
     ask_translate_ENG(Language, Input).
 translate(3, Language):-
@@ -123,12 +131,15 @@ ask_translate_ESP(Language,'exit'):-
     write(Session_Back_To_Menu),
     nl,
     subMenu(Language).
-ask_translate_ESP(Language,Input):-translate_ESP(Input, Output),
+ask_translate_ESP(Language,Input):-
+    translate_ESP(Input, Output),
     write_translate_ESP(Language, Output),
     !.
 ask_translate_ESP(Language, _):-fail_translation(Language),
     nl,
     translate('english', Language).
+ask_translate_ESP(_, end_of_file):-
+    write("Closing transLog...").
 
 %_____________________________________________
 % ask_translate_ENG : Function for interaction with module translator.pl
@@ -148,12 +159,15 @@ ask_translate_ENG(Language,'salir'):-
     write(Session_Back_To_Menu),
     nl,
     subMenu(Language).
-ask_translate_ENG(Language,Input):-translate_ENG(Output, Input),
+ask_translate_ENG(Language,Input):-
+    translate_ENG(Output, Input),
     write_translate_ENG(Language, Output),
     !.
 ask_translate_ENG(Language, _):-fail_translation(Language),
     nl,
     translate('spanish', Language).
+ask_translate_ENG(_, end_of_file):-
+    write("Cerrando transLog").
 
 %_____________________________________________
 % write_translate_ESP : Writes the spanish result back to the user in
